@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.department import Department
+from app.models.models import Department
 from app.repositories.base import BaseRepository
 
 

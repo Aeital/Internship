@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.employee import Employee, RoleEnum
+from app.models.models import Employee, RoleEnum
 from app.repositories.base import BaseRepository
 
 

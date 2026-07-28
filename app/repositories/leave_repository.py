@@ -1,7 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.leave import LeaveRequest, LeaveBalance, LeaveStatus
-from app.models.employee import Employee
+from app.models.models import LeaveRequest, LeaveBalance, LeaveStatus, Employee 
 from app.repositories.base import BaseRepository
 
 

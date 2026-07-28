@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.payroll import Payroll
+from app.models.models import Payroll
 from app.repositories.base import BaseRepository
 
 
