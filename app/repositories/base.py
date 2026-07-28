@@ -6,8 +6,8 @@ ModelType = TypeVar("ModelType", bound=Base)
 class BaseRepository(Generic[ModelType]):#generic async repo, new entities extended wout modifying
     def __init__(self, model: Type[ModelType], db: AsyncSession):
         self.model = model
-        self.db = db
-
+        self.db = db #initializer , version 
+        
     async def get_by_id(self, id: int) -> Optional[ModelType]:
         pk_col = self.model.__table__.c[self._pk_name()]
         result = await self.db.execute(select(self.model).where(pk_col == id))

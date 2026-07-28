@@ -18,3 +18,4 @@ SessionLocal = db.SessionLocal
 async def get_db(): #dependency injector
     async with SessionLocal() as session:
         yield session
+        #pool 
