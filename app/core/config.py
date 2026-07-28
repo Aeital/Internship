@@ -10,11 +10,6 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 @lru_cache()
-def get_settings() -> Settings:
-    """
-    Singleton pattern: lru_cache ensures Settings() is only
-    instantiated once, no matter how many times get_settings()
-    is called across the app.
-    """
+def get_settings() -> Settings: #ensures setting is only instantiated once
     return Settings()
 settings = get_settings()

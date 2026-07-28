@@ -9,13 +9,10 @@ class AttendanceStatus(str, enum.Enum):
     LATE = "late"
 class Attendance(Base):
     __tablename__ = "attendance"
-
     att_id = Column(Integer, primary_key=True, index=True)
     emp_id = Column(Integer, ForeignKey("employees.emp_id"), nullable=False)
-
     att_date = Column(Date, nullable=False)
     check_in = Column(Time, nullable=True)
     check_out = Column(Time, nullable=True)
     att_status = Column(Enum(AttendanceStatus), nullable=False, default=AttendanceStatus.PRESENT)
-
     employee = relationship("Employee", backref="attendance_records")

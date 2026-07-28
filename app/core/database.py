@@ -1,7 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from app.core.config import settings
-class Database:
+class Database: #singleton
     _instance = None
     def __new__(cls):
         if cls._instance is None:
@@ -9,17 +8,13 @@ class Database:
             cls._instance._init_engine()
         return cls._instance
     def _init_engine(self):
-        self.engine = create_engine(settings.DATABASE_URL)
-        self.SessionLocal = sessionmaker(
-            autocommit=False, autoflush=False, bind=self.engine
+        self.engine = create_async_engine(settings.DATABASE_URL, echo=False)
+        self.SessionLocal = async_sessionmaker(
+            bind=self.engine, class_=AsyncSession, expire_on_commit=False
         )
 db = Database()
 engine = db.engine
 SessionLocal = db.SessionLocal
-def get_db():
-    """Dependency used in FastAPI routes to get a DB session per request."""
-    session = SessionLocal()
-    try:
+async def get_db(): #dependency injector
+    async with SessionLocal() as session:
         yield session
-    finally:
-        session.close()
