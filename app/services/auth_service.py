@@ -1,8 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.employee_repository import EmployeeRepository
 from app.core.security import verify_password, create_access_token
-
-
 class AuthService:
     def __init__(self, db: AsyncSession):
         self.employee_repo = EmployeeRepository(db)
@@ -13,7 +11,6 @@ class AuthService:
             return None
         if not verify_password(password, employee.hashed_password):
             return None
-
         token = create_access_token(
             data={"emp_id": employee.emp_id, "role": employee.role.value}
         )

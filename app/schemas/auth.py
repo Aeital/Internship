@@ -4,7 +4,9 @@ class LoginRequest(BaseModel):
     password: str
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str = "bearer" #successful json response
 class TokenPayload(BaseModel):
     emp_id: int
-    role: str
+    role: str #data encrypted in jwt
+    #A Bearer Token is a security token that grants access to anyone who holds it
+    

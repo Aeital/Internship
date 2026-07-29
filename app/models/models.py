@@ -7,7 +7,7 @@ class RoleEnum(str, enum.Enum):
     """
     ISA hierarchy implemented as a discriminator column (standard practice 
     for disjoint specialization in relational databases).
-    """ #migration, how new, purani, account track
+    """ 
     ADMIN = "admin"
     HR = "hr"
     MANAGER = "manager"
