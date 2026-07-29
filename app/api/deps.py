@@ -7,8 +7,6 @@ from app.repositories.employee_repository import EmployeeRepository
 from app.models.models import Employee, RoleEnum
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
-
-
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db),
@@ -43,3 +41,4 @@ def require_role(*allowed_roles: RoleEnum):
             )
         return current_user
     return role_checker
+#uses FastAPI's dependency injection system, handles authentication and authorization
