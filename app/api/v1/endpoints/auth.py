@@ -8,7 +8,7 @@ router = APIRouter()
 async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     token = await auth_service.login(payload.email, payload.password)
-    if not token:
+    if not token: #aaa
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
