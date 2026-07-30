@@ -27,11 +27,6 @@ class ForbiddenException(AppException):
 
 
 def register_exception_handlers(app):
-    """
-    Registers global handlers so every error in the app returns
-    the same consistent JSON shape, regardless of which route or
-    layer it came from.
-    """
 
     @app.exception_handler(AppException)
     async def app_exception_handler(request: Request, exc: AppException):
