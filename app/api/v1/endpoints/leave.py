@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.exceptions import NotFoundException
+from app.core.openapi_responses import NOT_FOUND_RESPONSE, VALIDATION_RESPONSE, DB_ERROR_RESPONSE
 from app.schemas.leave import (
     LeaveTypeCreate, LeaveTypeUpdate, LeaveTypeResponse,
     LeaveRequestCreate, LeaveRequestUpdate, LeaveRequestResponse,
@@ -13,19 +14,32 @@ router = APIRouter()
 
 
 # --- LeaveType routes ---
-@router.post("/types", response_model=LeaveTypeResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/types",
+    response_model=LeaveTypeResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={**VALIDATION_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def create_leave_type(payload: LeaveTypeCreate, db: AsyncSession = Depends(get_db)):
     service = LeaveTypeService(db)
     return await service.create(payload)
 
 
-@router.get("/types", response_model=list[LeaveTypeResponse])
+@router.get(
+    "/types",
+    response_model=list[LeaveTypeResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def list_leave_types(db: AsyncSession = Depends(get_db)):
     service = LeaveTypeService(db)
     return await service.list_all()
 
 
-@router.get("/types/{type_id}", response_model=LeaveTypeResponse)
+@router.get(
+    "/types/{type_id}",
+    response_model=LeaveTypeResponse,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def get_leave_type(type_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveTypeService(db)
     result = await service.get(type_id)
@@ -35,31 +49,52 @@ async def get_leave_type(type_id: int, db: AsyncSession = Depends(get_db)):
 
 
 # --- LeaveRequest routes ---
-@router.post("/requests", response_model=LeaveRequestResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/requests",
+    response_model=LeaveRequestResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={**VALIDATION_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def create_leave_request(payload: LeaveRequestCreate, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     return await service.create(payload)
 
 
-@router.get("/requests", response_model=list[LeaveRequestResponse])
+@router.get(
+    "/requests",
+    response_model=list[LeaveRequestResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def list_leave_requests(db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     return await service.list_all()
 
 
-@router.get("/requests/employee/{emp_id}", response_model=list[LeaveRequestResponse])
+@router.get(
+    "/requests/employee/{emp_id}",
+    response_model=list[LeaveRequestResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def get_employee_leave_requests(emp_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     return await service.get_by_employee(emp_id)
 
 
-@router.get("/requests/pending/{manager_id}", response_model=list[LeaveRequestResponse])
+@router.get(
+    "/requests/pending/{manager_id}",
+    response_model=list[LeaveRequestResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def get_pending_for_manager(manager_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     return await service.get_pending_for_manager(manager_id)
 
 
-@router.get("/requests/{leave_id}", response_model=LeaveRequestResponse)
+@router.get(
+    "/requests/{leave_id}",
+    response_model=LeaveRequestResponse,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def get_leave_request(leave_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     result = await service.get(leave_id)
@@ -68,7 +103,11 @@ async def get_leave_request(leave_id: int, db: AsyncSession = Depends(get_db)):
     return result
 
 
-@router.put("/requests/{leave_id}", response_model=LeaveRequestResponse)
+@router.put(
+    "/requests/{leave_id}",
+    response_model=LeaveRequestResponse,
+    responses={**NOT_FOUND_RESPONSE, **VALIDATION_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def update_leave_request(leave_id: int, payload: LeaveRequestUpdate, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     result = await service.update(leave_id, payload)
@@ -77,7 +116,11 @@ async def update_leave_request(leave_id: int, payload: LeaveRequestUpdate, db: A
     return result
 
 
-@router.delete("/requests/{leave_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/requests/{leave_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def delete_leave_request(leave_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveRequestService(db)
     deleted = await service.delete(leave_id)
@@ -86,7 +129,11 @@ async def delete_leave_request(leave_id: int, db: AsyncSession = Depends(get_db)
 
 
 # --- LeaveBalance routes ---
-@router.get("/balance/{emp_id}/{type_id}", response_model=LeaveBalanceResponse)
+@router.get(
+    "/balance/{emp_id}/{type_id}",
+    response_model=LeaveBalanceResponse,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def get_leave_balance(emp_id: int, type_id: int, db: AsyncSession = Depends(get_db)):
     service = LeaveBalanceService(db)
     result = await service.get_balance(emp_id, type_id)

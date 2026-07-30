@@ -8,24 +8,12 @@ NOT_FOUND_RESPONSE = {
 VALIDATION_RESPONSE = {
     422: {
         "description": "Validation failed",
-        "content": {
-            "application/json": {
-                "example": {
-                    "success": False,
-                    "error": "Validation failed",
-                    "details": [
-                        {
-                            "type": "enum",
-                            "loc": ["body", "role"],
-                            "msg": "Input should be 'admin', 'hr', 'manager' or 'staff'",
-                            "input": "employee",
-                            "ctx": {"expected": "'admin', 'hr', 'manager' or 'staff'"},
-                        }
-                    ],
-                    "status_code": 422,
-                }
-            }
-        },
+        "content": {"application/json": {"example": {
+            "success": False,
+            "error": "Validation failed",
+            "details": [{"type": "missing", "loc": ["body", "field_name"], "msg": "Field required", "input": {}}],
+            "status_code": 422,
+        }}},
     }
 }
 
@@ -42,6 +30,7 @@ UNAUTHORIZED_RESPONSE = {
         "content": {"application/json": {"example": {"success": False, "error": "Invalid email or password", "status_code": 401}}},
     }
 }
+
 BAD_REQUEST_RESPONSE = {
     400: {
         "description": "Business rule violation",

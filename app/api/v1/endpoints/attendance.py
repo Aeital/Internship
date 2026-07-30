@@ -2,31 +2,49 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.exceptions import NotFoundException
+from app.core.openapi_responses import NOT_FOUND_RESPONSE, VALIDATION_RESPONSE, DB_ERROR_RESPONSE
 from app.schemas.attendance import AttendanceCreate, AttendanceUpdate, AttendanceResponse
 from app.services.attendance_service import AttendanceService
 
 router = APIRouter()
 
 
-@router.post("/", response_model=AttendanceResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=AttendanceResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={**VALIDATION_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def mark_attendance(payload: AttendanceCreate, db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     return await service.mark_attendance(payload)
 
 
-@router.get("/", response_model=list[AttendanceResponse])
+@router.get(
+    "/",
+    response_model=list[AttendanceResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def list_attendance(db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     return await service.list_attendance()
 
 
-@router.get("/employee/{emp_id}", response_model=list[AttendanceResponse])
+@router.get(
+    "/employee/{emp_id}",
+    response_model=list[AttendanceResponse],
+    responses={**DB_ERROR_RESPONSE},
+)
 async def get_employee_attendance(emp_id: int, db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     return await service.get_by_employee(emp_id)
 
 
-@router.get("/{att_id}", response_model=AttendanceResponse)
+@router.get(
+    "/{att_id}",
+    response_model=AttendanceResponse,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def get_attendance(att_id: int, db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     record = await service.get_attendance(att_id)
@@ -35,7 +53,11 @@ async def get_attendance(att_id: int, db: AsyncSession = Depends(get_db)):
     return record
 
 
-@router.put("/{att_id}", response_model=AttendanceResponse)
+@router.put(
+    "/{att_id}",
+    response_model=AttendanceResponse,
+    responses={**NOT_FOUND_RESPONSE, **VALIDATION_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def update_attendance(att_id: int, payload: AttendanceUpdate, db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     record = await service.update_attendance(att_id, payload)
@@ -44,7 +66,11 @@ async def update_attendance(att_id: int, payload: AttendanceUpdate, db: AsyncSes
     return record
 
 
-@router.delete("/{att_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{att_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={**NOT_FOUND_RESPONSE, **DB_ERROR_RESPONSE},
+)
 async def delete_attendance(att_id: int, db: AsyncSession = Depends(get_db)):
     service = AttendanceService(db)
     deleted = await service.delete_attendance(att_id)
