@@ -51,4 +51,4 @@ async def seed():
 
 
 if __name__ == "__main__":
-    asyncio.run(seed())
+    asyncio.run(seed()) #typescripting, micro frontend concept, hooks, 
