@@ -171,7 +171,7 @@ export default function LoginPage() {
                   fontSize: 13,
                 }}
               >
-                Enterprise Management System
+                Employee Management System
               </p>
             </div>
           </div>
