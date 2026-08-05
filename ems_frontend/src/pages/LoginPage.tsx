@@ -43,6 +43,7 @@ export default function LoginPage() {
         display: 'flex',
         height: '100vh',
         fontFamily: 'Poppins, sans-serif',
+        background: '#f8fafc',
       }}
     >
       {/* Left Panel */}
@@ -85,30 +86,31 @@ export default function LoginPage() {
           }}
         >
           <div
-  style={{
-    width: '100%',
-    background: 'rgba(255,255,255,0.08)',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
-    border: '1px solid rgba(255,255,255,0.12)',
-    borderRadius: 14,
-    padding: '18px 22px',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-  }}
->
-  <p
-    style={{
-      margin: 0,
-      color: '#fff',
-      fontSize: 15,
-      lineHeight: 1.6,
-      fontWeight: 400,
-    }}
-  >
-    Empowering automotive finance and digital retail with intelligent,
-    cloud-native solutions built for speed, flexibility, and innovation.
-  </p>
-</div>
+            style={{
+              width: '100%',
+              background: 'rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 14,
+              padding: '18px 22px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                color: '#fff',
+                fontSize: 15,
+                lineHeight: 1.6,
+                fontWeight: 400,
+              }}
+            >
+              Empowering automotive finance and digital retail with intelligent,
+              cloud-native solutions built for speed, flexibility, and
+              innovation.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -116,138 +118,179 @@ export default function LoginPage() {
       <div
         style={{
           flex: 1,
-          background: '#fff',
           display: 'flex',
-          flexDirection: 'column',
           justifyContent: 'center',
-          padding: 'clamp(32px, 5vw, 64px)',
-          boxShadow: '-4px 0 40px rgba(15,45,107,0.08)',
+          alignItems: 'center',
+          padding: '48px',
+          background: '#f8fafc',
         }}
       >
-        <div style={{ marginBottom: 40 }}>
-          <img
-            src={netsolLogo}
-            alt="NETSOL Technologies"
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 520,
+            background: '#fff',
+            borderRadius: 22,
+            padding: '42px',
+            boxShadow: '0 18px 50px rgba(15,45,107,0.12)',
+            border: '1px solid #edf2f7',
+          }}
+        >
+          <div
             style={{
-              height: 36,
-              marginBottom: 24,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              marginBottom: 36,
             }}
-          />
+          >
+            <img
+              src={netsolLogo}
+              alt="NETSOL Technologies"
+              style={{
+                height: 48,
+              }}
+            />
 
-          <h2
+            <div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 24,
+                  color: '#0f2d6b',
+                  fontWeight: 700,
+                }}
+              >
+                NETSOL Technologies
+              </h2>
+
+              <p
+                style={{
+                  margin: '4px 0 0',
+                  color: '#64748b',
+                  fontSize: 13,
+                }}
+              >
+                Enterprise Management System
+              </p>
+            </div>
+          </div>
+
+          <h1
             style={{
-              fontSize: 26,
-              fontWeight: 700,
+              margin: '0 0 8px',
+              fontSize: 30,
               color: '#0f2d6b',
-              margin: '0 0 6px',
+              fontWeight: 700,
             }}
           >
             Welcome back
-          </h2>
+          </h1>
 
           <p
             style={{
+              margin: '0 0 32px',
               color: '#64748b',
-              fontSize: 14,
-              margin: 0,
+              fontSize: 15,
             }}
           >
-            Sign in to your EMS account to continue
+            Sign in to your EMS account to continue.
           </p>
-        </div>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 20,
-          }}
-        >
-          <div>
-            <label style={labelStyle}>Email Address</label>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 20,
+            }}
+          >
+            <div>
+              <label style={labelStyle}>Email Address</label>
 
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@netsol.com"
-              style={inputStyle}
-              onFocus={(e) =>
-                (e.currentTarget.style.borderColor = '#1a56db')
-              }
-              onBlur={(e) =>
-                (e.currentTarget.style.borderColor = '#e2e8f0')
-              }
-            />
-          </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@netsol.com"
+                style={inputStyle}
+                onFocus={(e) =>
+                  (e.currentTarget.style.borderColor = '#1a56db')
+                }
+                onBlur={(e) =>
+                  (e.currentTarget.style.borderColor = '#dbe4f0')
+                }
+              />
+            </div>
 
-          <div>
-            <label style={labelStyle}>Password</label>
+            <div>
+              <label style={labelStyle}>Password</label>
 
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              style={inputStyle}
-              onFocus={(e) =>
-                (e.currentTarget.style.borderColor = '#1a56db')
-              }
-              onBlur={(e) =>
-                (e.currentTarget.style.borderColor = '#e2e8f0')
-              }
-            />
-          </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                style={inputStyle}
+                onFocus={(e) =>
+                  (e.currentTarget.style.borderColor = '#1a56db')
+                }
+                onBlur={(e) =>
+                  (e.currentTarget.style.borderColor = '#dbe4f0')
+                }
+              />
+            </div>
+                        {error && (
+              <div
+                style={{
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  borderRadius: 8,
+                  padding: '10px 14px',
+                  color: '#dc2626',
+                  fontSize: 13,
+                }}
+              >
+                {error}
+              </div>
+            )}
 
-          {error && (
-            <div
+            <button
+              type="submit"
+              disabled={loading}
               style={{
-                background: '#fef2f2',
-                border: '1px solid #fecaca',
-                borderRadius: 8,
-                padding: '10px 14px',
-                color: '#dc2626',
-                fontSize: 13,
+                background: loading ? '#93b4e8' : '#1a56db',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 10,
+                padding: '14px',
+                fontSize: 15,
+                fontWeight: 600,
+                fontFamily: 'Poppins, sans-serif',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'background .15s',
+                marginTop: 4,
               }}
             >
-              {error}
-            </div>
-          )}
+              {loading ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
+          <p
             style={{
-              background: loading ? '#93b4e8' : '#1a56db',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 10,
-              padding: '14px',
-              fontSize: 15,
-              fontWeight: 600,
-              fontFamily: 'Poppins, sans-serif',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'background 0.15s',
-              marginTop: 4,
+              color: '#94a3b8',
+              fontSize: 12,
+              textAlign: 'center',
+              marginTop: 36,
+              marginBottom: 0,
             }}
           >
-            {loading ? 'Signing in…' : 'Sign In'}
-          </button>
-        </form>
-
-        <p
-          style={{
-            color: '#94a3b8',
-            fontSize: 12,
-            textAlign: 'center',
-            marginTop: 40,
-          }}
-        >
-          © {new Date().getFullYear()} NETSOL Technologies. All rights reserved.
-        </p>
+            © {new Date().getFullYear()} NETSOL Technologies. All rights
+            reserved.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -263,13 +306,14 @@ const labelStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '11px 14px',
-  border: '1.5px solid #e2e8f0',
+  padding: '13px 16px',
+  border: '1.5px solid #dbe4f0',
   borderRadius: 10,
   fontSize: 14,
   fontFamily: 'Poppins, sans-serif',
   color: '#1e293b',
   outline: 'none',
-  transition: 'border-color 0.15s',
-  background: '#fafbff',
+  transition: 'border-color .2s ease',
+  background: '#f8fafc',
+  boxSizing: 'border-box',
 }
