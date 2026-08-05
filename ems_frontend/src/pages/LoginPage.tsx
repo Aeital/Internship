@@ -85,43 +85,30 @@ export default function LoginPage() {
           }}
         >
           <div
-            style={{
-              width: '100%',
-              background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: 20,
-              padding: '32px',
-              boxShadow: '0 20px 45px rgba(0,0,0,0.25)',
-            }}
-          >
-            <h2
-              style={{
-                margin: '0 0 16px',
-                color: '#fff',
-                fontSize: 30,
-                fontWeight: 700,
-                lineHeight: 1.2,
-              }}
-            >
-              Driving Digital Transformation
-            </h2>
-
-            <p
-              style={{
-                margin: 0,
-                color: 'rgba(255,255,255,0.92)',
-                fontSize: 16,
-                lineHeight: 1.8,
-              }}
-            >
-              Empowering automotive finance, equipment leasing, and omnichannel
-              retail with intelligent cloud-native solutions. NETSOL delivers
-              the flexibility, speed, and AI-powered innovation businesses need
-              to stay ahead in a rapidly evolving digital landscape.
-            </p>
-          </div>
+  style={{
+    width: '100%',
+    background: 'rgba(255,255,255,0.08)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: 14,
+    padding: '18px 22px',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+  }}
+>
+  <p
+    style={{
+      margin: 0,
+      color: '#fff',
+      fontSize: 15,
+      lineHeight: 1.6,
+      fontWeight: 400,
+    }}
+  >
+    Empowering automotive finance and digital retail with intelligent,
+    cloud-native solutions built for speed, flexibility, and innovation.
+  </p>
+</div>
         </div>
       </div>
 
