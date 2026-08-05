@@ -1,0 +1,10 @@
+{
+  "description": "Manage employee data, attendance, leave, payroll, and departments with role-based access to streamline HR and administrative tasks efficiently.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
