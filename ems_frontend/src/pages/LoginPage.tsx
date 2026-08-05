@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { api } from '@/api/client'
 import netsolBuilding from '@/imports/image-1.png'
+import netsolLogo from '@/imports/image.png'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -17,7 +18,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const { data } = await api.post('/auth/login', { user_email: email, password })
+      const { data } = await api.post('/auth/login', { email, password })
       login(data.access_token)
       navigate('/')
     } catch (err: any) {
@@ -53,37 +54,41 @@ export default function LoginPage() {
             objectFit: 'cover',
           }}
         />
-        {/* Dark blue overlay */}
+        {/* Subtle bottom-fade only — real photo stays visible, no full blue tint */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to top, rgba(15,45,107,0.95) 40%, rgba(15,45,107,0.6) 100%)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%)',
           }}
         />
+
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <NetsolMark />
-          <h1
+          <img src={netsolLogo} alt="NETSOL Technologies" style={{ height: 40, marginBottom: 28 }} />
+
+          {/* Small info card, replacing the old big heading block */}
+          <div
             style={{
-              color: '#fff',
-              fontSize: 'clamp(24px, 3vw, 36px)',
-              fontWeight: 700,
-              lineHeight: 1.25,
-              margin: '20px 0 12px',
+              background: 'rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(6px)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: 14,
+              padding: '22px 24px',
+              maxWidth: 420,
             }}
           >
-            Employee Management System
-          </h1>
-          <p style={{ color: '#93b4e8', fontSize: 15, lineHeight: 1.6, margin: 0 }}>
-            Streamline HR operations, attendance, payroll, and leave management — all in one secure platform.
-          </p>
-          <div style={{ display: 'flex', gap: 24, marginTop: 36 }}>
-            {[['500+', 'Employees'], ['99.9%', 'Uptime'], ['ISO', 'Certified']].map(([val, lbl]) => (
-              <div key={lbl}>
-                <div style={{ color: '#4d94ff', fontWeight: 700, fontSize: 22 }}>{val}</div>
-                <div style={{ color: '#93b4e8', fontSize: 12, marginTop: 2 }}>{lbl}</div>
-              </div>
-            ))}
+            <p
+              style={{
+                color: '#fff',
+                fontSize: 15,
+                lineHeight: 1.6,
+                margin: 0,
+                fontWeight: 400,
+              }}
+            >
+              From auto and equipment finance to omnichannel retail, we deliver the flexibility,
+              speed, and AI-powered intelligence you need to lead.
+            </p>
           </div>
         </div>
       </div>
@@ -102,13 +107,13 @@ export default function LoginPage() {
         }}
       >
         <div style={{ marginBottom: 40 }}>
-          <NetsolMark />
+          <img src={netsolLogo} alt="NETSOL Technologies" style={{ height: 36, marginBottom: 24 }} />
           <h2
             style={{
               fontSize: 26,
               fontWeight: 700,
               color: '#0f2d6b',
-              margin: '20px 0 6px',
+              margin: '0 0 6px',
             }}
           >
             Welcome back
@@ -210,20 +215,4 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
   transition: 'border-color 0.15s',
   background: '#fafbff',
-}
-
-function NetsolMark() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
-        <rect width="40" height="40" rx="8" fill="#1a56db" />
-        <path d="M10 30 L10 10 L18 22 L18 10" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        <path d="M22 10 L30 10 L30 30 L22 18 L22 30" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-      <div>
-        <div style={{ fontWeight: 700, fontSize: 16, color: '#0f2d6b', letterSpacing: 0.5 }}>NETSOL</div>
-        <div style={{ fontSize: 10, color: '#64748b', letterSpacing: 1, textTransform: 'uppercase' }}>Technologies</div>
-      </div>
-    </div>
-  )
 }
