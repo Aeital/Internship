@@ -158,7 +158,7 @@ export default function LoginPage() {
                   margin: 0,
                   fontSize: 24,
                   color: '#0f2d6b',
-                  fontWeight: 700,
+                  fontWeight: 650,
                 }}
               >
                 NETSOL Technologies
@@ -181,7 +181,7 @@ export default function LoginPage() {
               margin: '0 0 8px',
               fontSize: 30,
               color: '#0f2d6b',
-              fontWeight: 700,
+              fontWeight: 600,
             }}
           >
             Welcome back
