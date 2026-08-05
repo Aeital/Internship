@@ -94,18 +94,19 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel — form */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 480,
-          background: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: 'clamp(32px, 5vw, 64px)',
-          boxShadow: '-4px 0 40px rgba(15,45,107,0.08)',
-        }}
-      >
+      {/* Right panel — form */}
+<div
+  style={{
+    flex: 1,
+    background: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 'clamp(32px, 5vw, 64px)',
+    boxShadow: '-4px 0 40px rgba(15,45,107,0.08)',
+  }}
+>
+      
         <div style={{ marginBottom: 40 }}>
           <img src={netsolLogo} alt="NETSOL Technologies" style={{ height: 36, marginBottom: 24 }} />
           <h2
