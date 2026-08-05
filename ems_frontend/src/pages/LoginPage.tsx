@@ -64,7 +64,7 @@ export default function LoginPage() {
         />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <img src={netsolLogo} alt="NETSOL Technologies" style={{ height: 40, marginBottom: 28 }} />
+          
 
           {/* Small info card, replacing the old big heading block */}
           <div
