@@ -17,7 +17,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const { data } = await api.post('/auth/login', { email, password })
+      const { data } = await api.post('/auth/login', { user_email: email, password })
       login(data.access_token)
       navigate('/')
     } catch (err: any) {
