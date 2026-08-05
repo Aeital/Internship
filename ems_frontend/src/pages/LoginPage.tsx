@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
   const { login } = useAuth()
   const navigate = useNavigate()
 
@@ -17,30 +18,42 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
+
     try {
-      const { data } = await api.post('/auth/login', { email, password })
+      const { data } = await api.post('/auth/login', {
+        email,
+        password,
+      })
+
       login(data.access_token)
       navigate('/')
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Invalid credentials. Please try again.')
+      setError(
+        err.response?.data?.error ||
+          'Invalid credentials. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Poppins, sans-serif' }}>
-      {/* Left panel — brand */}
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        fontFamily: 'Poppins, sans-serif',
+      }}
+    >
+      {/* Left Panel */}
       <div
         style={{
           flex: 1,
           position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          padding: '48px',
           overflow: 'hidden',
-          minWidth: 0,
+          display: 'flex',
+          alignItems: 'flex-end',
+          padding: '64px 56px',
         }}
       >
         <img
@@ -54,61 +67,86 @@ export default function LoginPage() {
             objectFit: 'cover',
           }}
         />
-        {/* Subtle bottom-fade only — real photo stays visible, no full blue tint */}
+
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%)',
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0) 100%)',
           }}
         />
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          
-
-          {/* Small info card, replacing the old big heading block */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+          }}
+        >
           <div
             style={{
+              width: '100%',
               background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(6px)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
               border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: 14,
-              padding: '22px 24px',
-              maxWidth: 420,
+              borderRadius: 20,
+              padding: '32px',
+              boxShadow: '0 20px 45px rgba(0,0,0,0.25)',
             }}
           >
-            <p
+            <h2
               style={{
+                margin: '0 0 16px',
                 color: '#fff',
-                fontSize: 15,
-                lineHeight: 1.6,
-                margin: 0,
-                fontWeight: 400,
+                fontSize: 30,
+                fontWeight: 700,
+                lineHeight: 1.2,
               }}
             >
-              From auto and equipment finance to omnichannel retail, we deliver the flexibility,
-              speed, and AI-powered intelligence you need to lead.
+              Driving Digital Transformation
+            </h2>
+
+            <p
+              style={{
+                margin: 0,
+                color: 'rgba(255,255,255,0.92)',
+                fontSize: 16,
+                lineHeight: 1.8,
+              }}
+            >
+              Empowering automotive finance, equipment leasing, and omnichannel
+              retail with intelligent cloud-native solutions. NETSOL delivers
+              the flexibility, speed, and AI-powered innovation businesses need
+              to stay ahead in a rapidly evolving digital landscape.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Right panel — form */}
-      {/* Right panel — form */}
-<div
-  style={{
-    flex: 1,
-    background: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: 'clamp(32px, 5vw, 64px)',
-    boxShadow: '-4px 0 40px rgba(15,45,107,0.08)',
-  }}
->
-      
+      {/* Right Panel */}
+      <div
+        style={{
+          flex: 1,
+          background: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: 'clamp(32px, 5vw, 64px)',
+          boxShadow: '-4px 0 40px rgba(15,45,107,0.08)',
+        }}
+      >
         <div style={{ marginBottom: 40 }}>
-          <img src={netsolLogo} alt="NETSOL Technologies" style={{ height: 36, marginBottom: 24 }} />
+          <img
+            src={netsolLogo}
+            alt="NETSOL Technologies"
+            style={{
+              height: 36,
+              marginBottom: 24,
+            }}
+          />
+
           <h2
             style={{
               fontSize: 26,
@@ -119,37 +157,61 @@ export default function LoginPage() {
           >
             Welcome back
           </h2>
-          <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>
+
+          <p
+            style={{
+              color: '#64748b',
+              fontSize: 14,
+              margin: 0,
+            }}
+          >
             Sign in to your EMS account to continue
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+          }}
+        >
           <div>
             <label style={labelStyle}>Email Address</label>
+
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@netsol.com"
-              required
               style={inputStyle}
-              onFocus={(e) => (e.target.style.borderColor = '#1a56db')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+              onFocus={(e) =>
+                (e.currentTarget.style.borderColor = '#1a56db')
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor = '#e2e8f0')
+              }
             />
           </div>
 
           <div>
             <label style={labelStyle}>Password</label>
+
             <input
               type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              required
               style={inputStyle}
-              onFocus={(e) => (e.target.style.borderColor = '#1a56db')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+              onFocus={(e) =>
+                (e.currentTarget.style.borderColor = '#1a56db')
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor = '#e2e8f0')
+              }
             />
           </div>
 
@@ -189,7 +251,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p style={{ color: '#94a3b8', fontSize: 12, textAlign: 'center', marginTop: 40 }}>
+        <p
+          style={{
+            color: '#94a3b8',
+            fontSize: 12,
+            textAlign: 'center',
+            marginTop: 40,
+          }}
+        >
           © {new Date().getFullYear()} NETSOL Technologies. All rights reserved.
         </p>
       </div>
