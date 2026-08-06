@@ -22,7 +22,9 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
-
+function normalizeRole(role: string): 'ADMIN' | 'HR' | 'MANAGER' | 'STAFF' {
+  return (role || '').toUpperCase() as 'ADMIN' | 'HR' | 'MANAGER' | 'STAFF'
+}
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
 
