@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const payload = jwtDecode<JwtPayload>(token)
         if (payload.exp && payload.exp * 1000 > Date.now()) {
-          setUser({ emp_id: payload.emp_id, role: payload.role, token })
+          setUser({ emp_id: payload.emp_id, role: normalizeRole(payload.role), token })
         } else {
           localStorage.removeItem('ems_token')
         }
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (token: string) => {
     const payload = jwtDecode<JwtPayload>(token)
     localStorage.setItem('ems_token', token)
-    setUser({ emp_id: payload.emp_id, role: payload.role, token })
+    setUser({ emp_id: payload.emp_id, role: normalizeRole(payload.role), token })
   }
 
   const logout = () => {
