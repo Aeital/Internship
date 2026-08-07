@@ -167,7 +167,7 @@ function StaffAttendance() {
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <ToolBtn icon={<LayoutList size={14} />} label="List" active />
-            <ToolBtn icon={<Download size={14} />} label="Export" />
+           
           </div>
         </div>
 
