@@ -146,11 +146,11 @@ function StaffDashboard() {
           </div>
 
           <div style={{ display: 'flex', gap: 10 }}>
-            <Link to="/attendance" style={{ ... }}>
+            <Link to="/attendance" style={{ flex: 1, background: '#1a56db', color: '#fff', border: 'none', borderRadius: 10, padding: '11px', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', display: 'block' }}>
               View Attendance
-               </Link>
-                <Link to="/leave" style={{ ... }}>
-               Request Leave
+            </Link>
+            <Link to="/leave" style={{ flex: 1, background: '#fff', color: '#1a56db', border: '1.5px solid #1a56db', borderRadius: 10, padding: '11px', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', display: 'block' }}>
+              Request Leave
             </Link>
           </div>
         </div>
