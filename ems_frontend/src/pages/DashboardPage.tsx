@@ -198,9 +198,9 @@ function StaffDashboard() {
       <div style={cardStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div style={{ fontWeight: 700, fontSize: 15, color: '#0f2d6b' }}>Recent Attendance</div>
-          <a href="/attendance" style={{ fontSize: 13, color: '#1a56db', fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Link to="/attendance" style={{ fontSize: 13, color: '#1a56db', fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 2 }}>
             View all <ChevronRight size={14} />
-          </a>
+          </Link>
         </div>
         <RecentAttTable records={monthAtt.slice(0, 5)} loading={loading} />
       </div>
