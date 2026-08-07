@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { api } from '@/api/client'
+import { Link } from 'react-router'
 import {
   CalendarCheck,
   Clock,
