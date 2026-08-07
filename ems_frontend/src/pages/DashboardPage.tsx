@@ -86,7 +86,11 @@ function StaffDashboard() {
   }, [user])
 
   const presentCount = monthAtt.filter((a) => a.att_status === 'present').length
-  const lateCount = monthAtt.filter((a) => a.att_status === 'late').length
+  const lateCount = monthAtt.filter((a) => {
+  if (!a.check_in) return false
+  const [h, m] = a.check_in.split(':').map(Number)
+  return h > 9 || (h === 9 && m > 15)
+  }).length
   const pendingLeave = leaveReqs.filter((l) => l.leave_status === 'pending').length
 
   const greeting = getGreeting()
