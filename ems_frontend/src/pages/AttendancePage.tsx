@@ -70,7 +70,11 @@ function StaffAttendance() {
   const todayRecord = records.find((r) => r.att_date === todayStr())
   const monthRec = records.filter((r) => r.att_date.startsWith(currentMonth()))
   const presentDays = monthRec.filter((r) => r.att_status === 'present').length
-  const lateDays = monthRec.filter((r) => r.att_status === 'late').length
+  const lateDays = monthRec.filter((r) => {
+  if (!r.check_in) return false
+  const [h, m] = r.check_in.split(':').map(Number)
+  return h > 9 || (h === 9 && m > 15)
+}).length
   const totalMs = monthRec.reduce((sum, r) => {
     if (r.check_in && r.check_out) {
       const base = r.att_date
