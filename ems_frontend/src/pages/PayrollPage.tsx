@@ -19,7 +19,7 @@ interface Payroll {
 
 export default function PayrollPage() {
   const { user } = useAuth()
-  if (user?.role === 'STAFF') return <StaffPayroll />
+  if (user?.role === 'STAFF' || user?.role === 'MANAGER') return <StaffPayroll />
   return <AdminPayroll />
 }
 
