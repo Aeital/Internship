@@ -30,7 +30,7 @@ export default function EmployeesPage() {
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [modal, setModal] = useState<'create' | 'edit' | 'profile' | null>(null)
+  const [modal, setModal] = useState<'create' | 'edit' | 'profile' | 'dependents' | null>(null)
   const [form, setForm] = useState<any>({ ...emptyForm })
   const [editId, setEditId] = useState<number | null>(null)
   const [profileEmp, setProfileEmp] = useState<Employee | null>(null)
