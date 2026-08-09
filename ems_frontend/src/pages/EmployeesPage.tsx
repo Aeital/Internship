@@ -221,10 +221,10 @@ export default function EmployeesPage() {
             <Field label="Full Name" value={form.emp_name} onChange={(v) => setForm({ ...form, emp_name: v })} required />
             <Field label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
             {modal === 'create' && <Field label="Password" type="password" value={form.password} onChange={(v) => setForm({ ...form, password: v })} required />}
-            <div>
+           <div>
               <label style={fLabel}>Role</label>
               <select style={fInput} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
-                {['ADMIN', 'HR', 'MANAGER', 'STAFF'].map((r) => <option key={r}>{r}</option>)}
+                {['ADMIN', 'HR', 'MANAGER', 'STAFF'].map((r) => <option key={r} value={r.toLowerCase()}>{r}</option>)}
               </select>
             </div>
             <Field label="Department ID" type="number" value={form.dept_id} onChange={(v) => setForm({ ...form, dept_id: v })} />
