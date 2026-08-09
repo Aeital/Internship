@@ -64,7 +64,7 @@ export default function Layout() {
             flexShrink: 0,
           }}
         >
-          <NetsolLogo size={32} />
+          <img src={netsolLogo} alt="NETSOL" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain', background: '#fff' }} />
           {!collapsed && (
             <div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: 15, letterSpacing: 0.3 }}>
@@ -228,12 +228,3 @@ export default function Layout() {
   )
 }
 
-function NetsolLogo({ size = 32 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <rect width="40" height="40" rx="8" fill="#1a56db" />
-      <path d="M10 30 L10 10 L18 22 L18 10" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M22 10 L30 10 L30 30 L22 18 L22 30" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </svg>
-  )
-}
