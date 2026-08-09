@@ -37,7 +37,11 @@ export default function EmployeesPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null)
-
+  const [newEmpId, setNewEmpId] = useState<number | null>(null)
+  const [depForm, setDepForm] = useState({ dep_name: '', relationship_type: '' })
+  const [addedDependents, setAddedDependents] = useState<{ dep_name: string; relationship_type: string }[]>([])
+  const [depSaving, setDepSaving] = useState(false)
+  const [depError, setDepError] = useState('')
   const load = async () => {
     setLoading(true)
     try {
@@ -71,14 +75,32 @@ export default function EmployeesPage() {
       const payload: any = { ...form }
       if (payload.dept_id) payload.dept_id = Number(payload.dept_id)
       if (payload.manager_id) payload.manager_id = Number(payload.manager_id)
-      if (modal === 'create') await api.post('/employees', payload)
-      else if (editId) {
+      if (modal === 'create') {
+        const res = await api.post('/employees', payload)
+        const created = res.data?.data ?? res.data
+        load()
+        setNewEmpId(created?.emp_id ?? null)
+        setDepForm({ dep_name: '', relationship_type: '' })
+        setAddedDependents([])
+        setDepError('')
+        setModal('dependents')
+      } else if (editId) {
         if (!payload.password) delete payload.password
         await api.put(`/employees/${editId}`, payload)
+        setModal(null); load()
       }
-      setModal(null); load()
     } catch (err: any) { setError(err.response?.data?.error || 'Failed to save employee.') }
     setSaving(false)
+  }
+  const handleAddDependent = async () => {
+    if (!depForm.dep_name || !depForm.relationship_type) { setDepError('Please fill in both fields.'); return }
+    setDepSaving(true); setDepError('')
+    try {
+      await api.post('/dependents', { emp_id: newEmpId, dep_name: depForm.dep_name, relationship_type: depForm.relationship_type })
+      setAddedDependents([...addedDependents, { dep_name: depForm.dep_name, relationship_type: depForm.relationship_type }])
+      setDepForm({ dep_name: '', relationship_type: '' })
+    } catch (err: any) { setDepError(err.response?.data?.error || 'Failed to add dependent.') }
+    setDepSaving(false)
   }
   const handleDelete = async (id: number) => {
     try { await api.delete(`/employees/${id}`); load() } catch {}
