@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
+import netsolLogo from '@/imports/image.png'
 import {
   LayoutDashboard,
   Users,
