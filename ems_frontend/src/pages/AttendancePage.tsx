@@ -34,7 +34,7 @@ const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
 
 export default function AttendancePage() {
   const { user } = useAuth()
-  if (user?.role === 'STAFF' || user?.role === 'MANAGER') return <StaffAttendance />
+  if (user?.role === 'STAFF' || user?.role === 'MANAGER' || user?.role === 'HR' ) return <StaffAttendance />
   return <AdminAttendance />
 }
 
