@@ -237,6 +237,42 @@ export default function EmployeesPage() {
         </Modal>
       )}
 
+      {/* Dependents step (right after creating an employee) */}
+      {modal === 'dependents' && newEmpId && (
+        <Modal title="Add Dependents" onClose={() => { setModal(null); load() }}>
+          <p style={{ color: '#64748b', marginTop: 0, fontSize: 13 }}>
+            Employee created successfully. You can add their dependents now, or skip and add them later.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <Field label="Full Name" value={depForm.dep_name} onChange={(v) => setDepForm({ ...depForm, dep_name: v })} />
+            <div>
+              <label style={fLabel}>Relationship</label>
+              <select style={fInput} value={depForm.relationship_type} onChange={(e) => setDepForm({ ...depForm, relationship_type: e.target.value })}>
+                <option value="">Select…</option>
+                {['Spouse', 'Child', 'Parent', 'Sibling', 'Other'].map((r) => <option key={r} value={r.toLowerCase()}>{r}</option>)}
+              </select>
+            </div>
+          </div>
+          {depError && <div style={errorBox}>{depError}</div>}
+
+          {addedDependents.length > 0 && (
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 11.5, fontWeight: 600, color: '#94a3b8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>Added</div>
+              {addedDependents.map((d, i) => (
+                <div key={i} style={{ fontSize: 13, color: '#0f2d6b', padding: '4px 0' }}>• {d.dep_name} ({d.relationship_type})</div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
+            <button onClick={() => { setModal(null); load() }} style={cancelBtn}>Done</button>
+            <button onClick={handleAddDependent} disabled={depSaving} style={primaryBtn}>{depSaving ? 'Adding…' : '+ Add Dependent'}</button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Profile Modal */}
+
       {/* Profile Modal */}
       {modal === 'profile' && profileEmp && (
         <Modal title="Employee Profile" onClose={() => setModal(null)}>
