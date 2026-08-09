@@ -20,7 +20,7 @@ const ALL_NAV_ITEMS = [
   { to: '/departments', label: 'Departments', Icon: Building2, roles: ['ADMIN', 'HR'] },
   { to: '/attendance', label: 'Attendance', Icon: CalendarCheck, roles: ['ADMIN', 'HR', 'MANAGER', 'STAFF'] },
   { to: '/leave', label: 'Leave', Icon: Clock, roles: ['ADMIN', 'HR', 'MANAGER', 'STAFF'] },
-  { to: '/payroll', label: 'Payroll', Icon: DollarSign, roles: ['ADMIN', 'HR', 'STAFF'] },
+  { to: '/payroll', label: 'Payroll', Icon: DollarSign, roles: ['ADMIN', 'HR', 'STAFF','MANAGER'] },
   { to: '/audit', label: 'Audit Logs', Icon: ShieldCheck, roles: ['ADMIN'] },
 ]
 
