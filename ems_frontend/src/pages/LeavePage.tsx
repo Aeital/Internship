@@ -58,7 +58,7 @@ function HRLeave() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [typeModal, setTypeModal] = useState<'create' | 'edit' | null>(null)
   const [editTypeId, setEditTypeId] = useState<number | null>(null)
-  const [typeForm, setTypeForm] = useState({ type_name: '' })
+  const [typeForm, setTypeForm] = useState({ type_name: '', annual_allowance: '' })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
