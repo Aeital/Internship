@@ -73,18 +73,15 @@ export default function EmployeesPage() {
     setSaving(true); setError('')
     try {
       const payload: any = { ...form }
+      payload.role = String(payload.role).toLowerCase()
       if (payload.dept_id) payload.dept_id = Number(payload.dept_id)
-      if (payload.manager_id) payload.manager_id = Number(payload.manager_id)
-      
-      else delete payload.dept_id
       if (payload.manager_id) payload.manager_id = Number(payload.manager_id)
       else delete payload.manager_id
       if (payload.staff_grade === '') delete payload.staff_grade
       if (payload.phone === '') delete payload.phone
-      if (payload.hire_date === '') delete payload.hire_date
-      if (payload.dob === '') delete payload.dob 
+
       if (modal === 'create') {
-        const res = await api.post('/employees', payload)
+        const res = await api.post('/employees/', payload)
         const created = res.data?.data ?? res.data
         load()
         setNewEmpId(created?.emp_id ?? null)
