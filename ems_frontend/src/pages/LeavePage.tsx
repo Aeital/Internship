@@ -81,14 +81,15 @@ function HRLeave() {
   }
 
   const handleSaveType = async () => {
-    setSaving(true); setError('')
-    try {
-      if (typeModal === 'create') await api.post('/leave/types', typeForm)
-      else if (editTypeId) await api.put(`/leave/types/${editTypeId}`, typeForm)
-      setTypeModal(null); loadAll()
-    } catch (err: any) { setError(err.response?.data?.error || 'Failed to save.') }
-    setSaving(false)
-  }
+  setSaving(true); setError('')
+  try {
+    const payload = { type_name: typeForm.type_name, annual_allowance: Number(typeForm.annual_allowance) }
+    if (typeModal === 'create') await api.post('/leave/types', payload)
+    else if (editTypeId) await api.put(`/leave/types/${editTypeId}`, payload)
+    setTypeModal(null); loadAll()
+  } catch (err: any) { setError(err.response?.data?.error || 'Failed to save.') }
+  setSaving(false)
+}
 
   const handleDeleteType = async (id: number) => {
     try { await api.delete(`/leave/types/${id}`); loadAll() } catch {}
