@@ -80,8 +80,16 @@ function HRLeave() {
     try { await api.put(`/leave/requests/${leaveId}`, { leave_status: status, approved_by: approvedBy }); loadAll() } catch {}
   }
 
-  
-  
+  const handleSaveType = async () => {
+    setSaving(true); setError('')
+    try {
+      const payload = { type_name: typeForm.type_name, annual_allowance: Number(typeForm.annual_allowance) }
+      if (typeModal === 'create') await api.post('/leave/types', payload)
+      else if (editTypeId) await api.put(`/leave/types/${editTypeId}`, payload)
+      setTypeModal(null); loadAll()
+    } catch (err: any) { setError(err.response?.data?.error || 'Failed to save.') }
+    setSaving(false)
+  }
 
   const handleDeleteType = async (id: number) => {
     try { await api.delete(`/leave/types/${id}`); loadAll() } catch {}
@@ -186,7 +194,7 @@ function HRLeave() {
         <div style={cardStyle}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <div style={{ fontWeight: 700, fontSize: 15, color: '#0f2d6b' }}>Leave Types</div>
-            <button onClick={() => { setTypeForm({ type_name: '' }); setEditTypeId(null); setError(''); setTypeModal('create') }} style={{ ...primaryBtn, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <button onClick={() => { setTypeForm({ type_name: '', annual_allowance: '' }); setEditTypeId(null); setError(''); setTypeModal('create') }} style={{ ...primaryBtn, display: 'flex', alignItems: 'center', gap: 6 }}>
               <Plus size={14} /> Add Type
             </button>
           </div>
@@ -204,7 +212,7 @@ function HRLeave() {
                         <span style={{ fontWeight: 700, fontSize: 14, color: '#0f2d6b' }}>{t.type_name}</span>
                       </div>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button onClick={() => { setTypeForm({ type_name: t.type_name }); setEditTypeId(t.type_id); setError(''); setTypeModal('edit') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1a56db', padding: 4, display: 'flex' }}>
+                        <button onClick={() => { setTypeForm({ type_name: t.type_name, annual_allowance: '' }); setEditTypeId(t.type_id); setError(''); setTypeModal('edit') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1a56db', padding: 4, display: 'flex' }}>
                           <Edit2 size={14} />
                         </button>
                         <button onClick={() => handleDeleteType(t.type_id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: 4, display: 'flex' }}>
@@ -226,7 +234,8 @@ function HRLeave() {
 
       {typeModal && (
         <Modal title={typeModal === 'create' ? 'Add Leave Type' : 'Edit Leave Type'} onClose={() => setTypeModal(null)}>
-          <Field label="Type Name" value={typeForm.type_name} onChange={(v) => setTypeForm({ type_name: v })} required />
+          <Field label="Type Name" value={typeForm.type_name} onChange={(v) => setTypeForm({ ...typeForm, type_name: v })} required />
+          <Field label="Annual Allowance (days)" type="number" value={typeForm.annual_allowance} onChange={(v) => setTypeForm({ ...typeForm, annual_allowance: v })} required />
           {error && <div style={errorBox}>{error}</div>}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
             <button onClick={() => setTypeModal(null)} style={cancelBtn}>Cancel</button>
@@ -315,7 +324,6 @@ function ManagerLeave() {
 
       {activeTab === 'personal' && (
         <div>
-          {/* Balance cards */}
           {!loading && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 20 }}>
               {types.map((t) => {
@@ -592,7 +600,7 @@ function AdminLeave() {
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState<'request' | 'type' | null>(null)
   const [form, setForm] = useState({ type_id: '', start_date: '', end_date: '' })
-  const [typeForm, setTypeForm] = useState({ type_name: '' })
+  const [typeForm, setTypeForm] = useState({ type_name: '', annual_allowance: '' })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -625,7 +633,10 @@ function AdminLeave() {
   }
   const handleAddType = async () => {
     setSaving(true); setError('')
-    try { await api.post('/leave/types', typeForm); setModal(null); loadAll() }
+    try {
+      const payload = { type_name: typeForm.type_name, annual_allowance: Number(typeForm.annual_allowance) }
+      await api.post('/leave/types', payload); setModal(null); loadAll()
+    }
     catch (err: any) { setError(err.response?.data?.error || 'Failed.') }
     setSaving(false)
   }
@@ -681,7 +692,7 @@ function AdminLeave() {
         <div style={cardStyle}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <div style={{ fontWeight: 700, fontSize: 15, color: '#0f2d6b' }}>Leave Types</div>
-            <button onClick={() => { setTypeForm({ type_name: '' }); setError(''); setModal('type') }} style={primaryBtn}>+ Add</button>
+            <button onClick={() => { setTypeForm({ type_name: '', annual_allowance: '' }); setError(''); setModal('type') }} style={primaryBtn}>+ Add</button>
           </div>
           {loading ? <LoadingRows /> : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
@@ -720,7 +731,8 @@ function AdminLeave() {
       )}
       {modal === 'type' && (
         <Modal title="Add Leave Type" onClose={() => setModal(null)}>
-          <Field label="Type Name" value={typeForm.type_name} onChange={(v) => setTypeForm({ type_name: v })} required />
+          <Field label="Type Name" value={typeForm.type_name} onChange={(v) => setTypeForm({ ...typeForm, type_name: v })} required />
+          <Field label="Annual Allowance (days)" type="number" value={typeForm.annual_allowance} onChange={(v) => setTypeForm({ ...typeForm, annual_allowance: v })} required />
           {error && <div style={errorBox}>{error}</div>}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
             <button onClick={() => setModal(null)} style={cancelBtn}>Cancel</button>
