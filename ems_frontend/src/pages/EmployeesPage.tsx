@@ -75,6 +75,7 @@ export default function EmployeesPage() {
       const payload: any = { ...form }
       if (payload.dept_id) payload.dept_id = Number(payload.dept_id)
       if (payload.manager_id) payload.manager_id = Number(payload.manager_id)
+      
       else delete payload.dept_id
       if (payload.manager_id) payload.manager_id = Number(payload.manager_id)
       else delete payload.manager_id
