@@ -16,7 +16,7 @@ import {
 
 const ALL_NAV_ITEMS = [
   { to: '/', label: 'Dashboard', Icon: LayoutDashboard, end: true, roles: ['ADMIN', 'HR', 'MANAGER', 'STAFF'] },
-  { to: '/employees', label: 'Employees', Icon: Users, roles: ['ADMIN', 'HR', 'MANAGER'] },
+  { to: '/employees', label: 'Employees', Icon: Users, roles: ['ADMIN', 'HR'] },
   { to: '/departments', label: 'Departments', Icon: Building2, roles: ['ADMIN', 'HR'] },
   { to: '/attendance', label: 'Attendance', Icon: CalendarCheck, roles: ['ADMIN', 'HR', 'MANAGER', 'STAFF'] },
   { to: '/leave', label: 'Leave', Icon: Clock, roles: ['ADMIN', 'HR', 'MANAGER', 'STAFF'] },
