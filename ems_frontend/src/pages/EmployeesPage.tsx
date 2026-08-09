@@ -45,7 +45,7 @@ export default function EmployeesPage() {
   const load = async () => {
     setLoading(true)
     try {
-      const res = await api.get('/employees')
+      const res = await api.get('/employees/')
       setEmployees(res.data?.data ?? res.data ?? [])
     } catch {}
     setLoading(false)
