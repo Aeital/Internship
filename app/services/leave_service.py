@@ -1,8 +1,18 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.repositories.leave_repository import LeaveRepository
+from app.repositories.leave_type_repository import LeaveTypeRepository
+from app.schemas.leave import (
+    LeaveTypeCreate, LeaveTypeUpdate,
+    LeaveRequestCreate, LeaveRequestUpdate,
+    LeaveBalanceCreate, LeaveBalanceUpdate,
+)
+from app.schemas.audit import ApprovalLogCreate
+from app.services.audit_service import ApprovalLogService
 
-
-class LeaveTypeService:
+class LeaveRequestService:
     def __init__(self, db: AsyncSession):
-        self.repo = LeaveTypeRepository(db)
+        self.repo = LeaveRepository(db)
+        self.approval_log = ApprovalLogService(db)
 
     async def create(self, data: LeaveTypeCreate):
         return await self.repo.create(data.model_dump())
@@ -13,8 +23,16 @@ class LeaveTypeService:
     async def list_all(self):
         return await self.repo.get_all()
 
-    async def update(self, type_id: int, data: LeaveTypeUpdate):
-        return await self.repo.update(type_id, data.model_dump(exclude_unset=True))
+    async def update(self, leave_id: int, data: LeaveRequestUpdate):
+        payload = data.model_dump(exclude_unset=True)
+        leave_request = await self.repo.update(leave_id, payload)
+        if leave_request and payload.get("leave_status"):
+            await self.approval_log.create(ApprovalLogCreate(
+                leave_id=leave_id,
+                action=payload["leave_status"],
+                approved_by=payload.get("approved_by"),
+            ))
+        return leave_request
 
     async def delete(self, type_id: int):
         return await self.repo.delete(type_id)
