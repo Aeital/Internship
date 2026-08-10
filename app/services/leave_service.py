@@ -1,11 +1,3 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.repositories.leave_repository import LeaveRepository
-from app.repositories.leave_type_repository import LeaveTypeRepository
-from app.schemas.leave import (
-    LeaveTypeCreate, LeaveTypeUpdate,
-    LeaveRequestCreate, LeaveRequestUpdate,
-    LeaveBalanceCreate, LeaveBalanceUpdate,
-)
 
 
 class LeaveTypeService:
