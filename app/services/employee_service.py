@@ -2,12 +2,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.employee_repository import EmployeeRepository
 from app.core.security import hash_password
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate
-from app.schemas.audit import AuditLogCreate
-from app.services.audit_service import AuditLogService
+
 
 
 class EmployeeService:
     def __init__(self, db: AsyncSession):
+        from app.services.audit_service import AuditLogService
         self.repo = EmployeeRepository(db)
         self.audit = AuditLogService(db)
 

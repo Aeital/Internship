@@ -6,8 +6,7 @@ from app.schemas.leave import (
     LeaveRequestCreate, LeaveRequestUpdate,
     LeaveBalanceCreate, LeaveBalanceUpdate,
 )
-from app.schemas.audit import ApprovalLogCreate
-from app.services.audit_service import ApprovalLogService
+
 
 class LeaveRequestService:
     def __init__(self, db: AsyncSession):
@@ -24,6 +23,7 @@ class LeaveRequestService:
         return await self.repo.get_all()
 
     async def update(self, leave_id: int, data: LeaveRequestUpdate):
+        from app.schemas.audit import ApprovalLogCreate
         payload = data.model_dump(exclude_unset=True)
         leave_request = await self.repo.update(leave_id, payload)
         if leave_request and payload.get("leave_status"):
@@ -40,7 +40,9 @@ class LeaveRequestService:
 
 class LeaveRequestService:
     def __init__(self, db: AsyncSession):
+        from app.services.audit_service import ApprovalLogService
         self.repo = LeaveRepository(db)
+        self.approval_log = ApprovalLogService(db)
 
     async def create(self, data: LeaveRequestCreate):
         return await self.repo.create(data.model_dump())
