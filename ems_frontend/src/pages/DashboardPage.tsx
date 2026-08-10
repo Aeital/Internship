@@ -432,6 +432,7 @@ function AdminDashboard() {
     { label: 'Your Employee ID', value: user?.emp_id ?? '—', sub: user?.role, color: '#7c3aed', Icon: Hash },
   ]
 
+  
   return (
     <div>
       <PageHeader title={`${getGreeting()}, Admin`} sub="Here's your EMS overview for today." />
@@ -449,9 +450,7 @@ function AdminDashboard() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
         <AdminQuickLinks role={user?.role} />
-        <div style={cardStyle}>
-          <div style={{ color: '#94a3b8', fontSize: 13, textAlign: 'center', padding: '24px 0' }}>Activity feed loads from audit logs</div>
-        </div>
+        <RecentActivityFeed />
       </div>
     </div>
   )
@@ -484,7 +483,53 @@ function AdminQuickLinks({ role }: { role?: string }) {
     </div>
   )
 }
+function RecentActivityFeed() {
+  const [logs, setLogs] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await api.get('/audit/audit-logs')
+        const data = res.data?.data ?? res.data ?? []
+        setLogs(Array.isArray(data) ? data.slice(-5).reverse() : [])
+      } catch {}
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  return (
+    <div style={cardStyle}>
+      <div style={cardTitleStyle}>Recent Activity</div>
+      {loading ? (
+        <div style={{ height: 80, background: '#f8faff', borderRadius: 8 }} />
+      ) : logs.length === 0 ? (
+        <div style={{ color: '#94a3b8', fontSize: 13, textAlign: 'center', padding: '24px 0' }}>No recent activity.</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {logs.map((log, i) => {
+            const actionColors: Record<string, string> = { CREATE: '#16a34a', UPDATE: '#1a56db', DELETE: '#dc2626' }
+            const color = actionColors[log.action_type] ?? '#64748b'
+            return (
+              <div key={log.audit_id ?? i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: i < logs.length - 1 ? '1px solid #f8faff' : 'none', alignItems: 'flex-start' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, marginTop: 5, flexShrink: 0 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1e293b' }}>
+                    {log.action_type} {log.table_affected} {log.record_id ? `#${log.record_id}` : ''}
+                  </div>
+                  <div style={{ fontSize: 11.5, color: '#94a3b8', marginTop: 2 }}>
+                    {log.timestamp ? new Date(log.timestamp).toLocaleString() : ''}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
 // ── Shared sub-components ─────────────────────────────────────────────────────
 
 function ProfileRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
