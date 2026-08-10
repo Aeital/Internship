@@ -142,16 +142,18 @@ class Payroll(Base):
         """
         return float(self.basic_salary) - float(self.deductions)
 
-
 class ApprovalLog(Base):
     __tablename__ = "approval_logs"
 
     log_id = Column(Integer, primary_key=True, index=True)
     leave_id = Column(Integer, ForeignKey("leave_requests.leave_id"), nullable=False)
+    action = Column(String(20), nullable=False)
+    approved_by = Column(Integer, ForeignKey("employees.emp_id"), nullable=True)
     approved_on = Column(DateTime(timezone=True), server_default=func.now())
     remarks = Column(String(255), nullable=True)
 
     leave_request = relationship("LeaveRequest", backref="approval_logs")
+    approver = relationship("Employee", foreign_keys=[approved_by])
 
 
 class AuditLog(Base):
