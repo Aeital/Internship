@@ -4,7 +4,6 @@ from app.core.security import hash_password
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate
 
 
-
 class EmployeeService:
     def __init__(self, db: AsyncSession):
         from app.services.audit_service import AuditLogService
@@ -12,6 +11,7 @@ class EmployeeService:
         self.audit = AuditLogService(db)
 
     async def create_employee(self, data: EmployeeCreate):
+        from app.schemas.audit import AuditLogCreate
         payload = data.model_dump(exclude={"password"})
         payload["hashed_password"] = hash_password(data.password)
         employee = await self.repo.create(payload)
@@ -32,6 +32,7 @@ class EmployeeService:
         return await self.repo.get_all()
 
     async def update_employee(self, emp_id: int, data: EmployeeUpdate):
+        from app.schemas.audit import AuditLogCreate
         payload = data.model_dump(exclude_unset=True)
         employee = await self.repo.update(emp_id, payload)
         if employee:
@@ -46,6 +47,7 @@ class EmployeeService:
         return employee
 
     async def delete_employee(self, emp_id: int):
+        from app.schemas.audit import AuditLogCreate
         deleted = await self.repo.delete(emp_id)
         if deleted:
             await self.audit.create(AuditLogCreate(

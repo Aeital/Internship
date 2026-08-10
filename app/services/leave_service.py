@@ -8,10 +8,9 @@ from app.schemas.leave import (
 )
 
 
-class LeaveRequestService:
+class LeaveTypeService:
     def __init__(self, db: AsyncSession):
-        self.repo = LeaveRepository(db)
-        self.approval_log = ApprovalLogService(db)
+        self.repo = LeaveTypeRepository(db)
 
     async def create(self, data: LeaveTypeCreate):
         return await self.repo.create(data.model_dump())
@@ -22,17 +21,8 @@ class LeaveRequestService:
     async def list_all(self):
         return await self.repo.get_all()
 
-    async def update(self, leave_id: int, data: LeaveRequestUpdate):
-        from app.schemas.audit import ApprovalLogCreate
-        payload = data.model_dump(exclude_unset=True)
-        leave_request = await self.repo.update(leave_id, payload)
-        if leave_request and payload.get("leave_status"):
-            await self.approval_log.create(ApprovalLogCreate(
-                leave_id=leave_id,
-                action=payload["leave_status"],
-                approved_by=payload.get("approved_by"),
-            ))
-        return leave_request
+    async def update(self, type_id: int, data: LeaveTypeUpdate):
+        return await self.repo.update(type_id, data.model_dump(exclude_unset=True))
 
     async def delete(self, type_id: int):
         return await self.repo.delete(type_id)
@@ -60,7 +50,16 @@ class LeaveRequestService:
         return await self.repo.get_pending_for_approval(manager_id)
 
     async def update(self, leave_id: int, data: LeaveRequestUpdate):
-        return await self.repo.update(leave_id, data.model_dump(exclude_unset=True))
+        from app.schemas.audit import ApprovalLogCreate
+        payload = data.model_dump(exclude_unset=True)
+        leave_request = await self.repo.update(leave_id, payload)
+        if leave_request and payload.get("leave_status"):
+            await self.approval_log.create(ApprovalLogCreate(
+                leave_id=leave_id,
+                action=payload["leave_status"],
+                approved_by=payload.get("approved_by"),
+            ))
+        return leave_request
 
     async def delete(self, leave_id: int):
         return await self.repo.delete(leave_id)
