@@ -5,6 +5,8 @@ from pydantic import BaseModel
 # --- ApprovalLog ---
 class ApprovalLogBase(BaseModel):
     leave_id: int
+    action: str
+    approved_by: int | None = None
     remarks: str | None = None
 
 
