@@ -119,7 +119,6 @@ function HRLeave() {
 
       <TabBar tabs={tabs} active={tab} onChange={(t) => setTab(t as any)} />
 
-      {/* ── All Requests ── */}
       {tab === 'requests' && (
         <div style={cardStyle}>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -144,7 +143,6 @@ function HRLeave() {
         </div>
       )}
 
-      {/* ── Pending approvals ── */}
       {tab === 'pending' && (
         <div style={cardStyle}>
           <div style={{ fontWeight: 700, fontSize: 15, color: '#0f2d6b', marginBottom: 20 }}>
@@ -189,7 +187,6 @@ function HRLeave() {
         </div>
       )}
 
-      {/* ── Leave Types ── */}
       {tab === 'types' && (
         <div style={cardStyle}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -253,7 +250,6 @@ function ManagerLeave() {
   const { user } = useAuth()
   const [requests, setRequests] = useState<LeaveRequest[]>([])
   const [types, setTypes] = useState<LeaveType[]>([])
-  const [balances, setBalances] = useState<Record<number, number>>({})
   const [pendingTeam, setPendingTeam] = useState<LeaveRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
@@ -271,24 +267,9 @@ function ManagerLeave() {
         api.get('/leave/types'),
         api.get(`/leave/requests/pending/${user?.emp_id}`),
       ])
-      let fetchedTypes: LeaveType[] = []
       if (reqRes.status === 'fulfilled')  setRequests(reqRes.value.data?.data ?? reqRes.value.data ?? [])
-      if (typeRes.status === 'fulfilled') {
-        fetchedTypes = typeRes.value.data?.data ?? typeRes.value.data ?? []
-        setTypes(fetchedTypes)
-      }
+      if (typeRes.status === 'fulfilled') setTypes(typeRes.value.data?.data ?? typeRes.value.data ?? [])
       if (pendRes.status === 'fulfilled') setPendingTeam(pendRes.value.data?.data ?? pendRes.value.data ?? [])
-      if (user?.emp_id && fetchedTypes.length > 0) {
-        const balRes = await Promise.allSettled(fetchedTypes.map((t) => api.get(`/leave/balance/${user.emp_id}/${t.type_id}`)))
-        const bal: Record<number, number> = {}
-        balRes.forEach((r, i) => {
-          if (r.status === 'fulfilled') {
-            const d = r.value.data?.data ?? r.value.data
-            bal[fetchedTypes[i].type_id] = d?.remaining_days ?? d?.balance ?? 0
-          }
-        })
-        setBalances(bal)
-      }
     } catch {}
     setLoading(false)
   }
@@ -330,7 +311,10 @@ function ManagerLeave() {
                 const key = t.type_name.toLowerCase()
                 const color = typeColorMap[key] ?? '#1a56db'
                 const limit = typeLimitMap[key] ?? 10
-                const remaining = balances[t.type_id] ?? limit
+                const used = requests
+                  .filter((r) => r.leave_status === 'approved' && r.type_id === t.type_id)
+                  .reduce((sum, r) => sum + calcDays(r.start_date, r.end_date), 0)
+                const remaining = Math.max(0, limit - used)
                 const pct = Math.max(0, Math.min(100, (remaining / limit) * 100))
                 return (
                   <div key={t.type_id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 16px' }}>
@@ -443,7 +427,6 @@ function StaffLeave() {
   const { user } = useAuth()
   const [requests, setRequests] = useState<LeaveRequest[]>([])
   const [types, setTypes] = useState<LeaveType[]>([])
-  const [balances, setBalances] = useState<Record<number, number>>({})
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
   const [form, setForm] = useState({ type_id: '', start_date: '', end_date: '' })
@@ -458,23 +441,8 @@ function StaffLeave() {
         api.get(`/leave/requests/employee/${user?.emp_id}`),
         api.get('/leave/types'),
       ])
-      let fetchedTypes: LeaveType[] = []
       if (reqRes.status === 'fulfilled')  setRequests(reqRes.value.data?.data ?? reqRes.value.data ?? [])
-      if (typeRes.status === 'fulfilled') {
-        fetchedTypes = typeRes.value.data?.data ?? typeRes.value.data ?? []
-        setTypes(fetchedTypes)
-      }
-      if (user?.emp_id && fetchedTypes.length > 0) {
-        const balRes = await Promise.allSettled(fetchedTypes.map((t) => api.get(`/leave/balance/${user.emp_id}/${t.type_id}`)))
-        const bal: Record<number, number> = {}
-        balRes.forEach((r, i) => {
-          if (r.status === 'fulfilled') {
-            const d = r.value.data?.data ?? r.value.data
-            bal[fetchedTypes[i].type_id] = d?.remaining_days ?? d?.balance ?? 0
-          }
-        })
-        setBalances(bal)
-      }
+      if (typeRes.status === 'fulfilled') setTypes(typeRes.value.data?.data ?? typeRes.value.data ?? [])
     } catch {}
     setLoading(false)
   }
@@ -508,7 +476,10 @@ function StaffLeave() {
             const key = t.type_name.toLowerCase()
             const color = typeColorMap[key] ?? '#1a56db'
             const limit = typeLimitMap[key] ?? 10
-            const remaining = balances[t.type_id] ?? limit
+            const used = requests
+              .filter((r) => r.leave_status === 'approved' && r.type_id === t.type_id)
+              .reduce((sum, r) => sum + calcDays(r.start_date, r.end_date), 0)
+            const remaining = Math.max(0, limit - used)
             const pct = Math.max(0, Math.min(100, (remaining / limit) * 100))
             return (
               <div key={t.type_id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 16px' }}>
