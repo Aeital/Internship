@@ -18,6 +18,6 @@ api.interceptors.response.use(
       localStorage.removeItem('ems_token')
       window.location.href = '/login'
     }
-    return Promise.reject(err)
+    return Promise.reject(err) //koi or msg
   }
 )
