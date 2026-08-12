@@ -80,7 +80,7 @@ class Attendance(Base):
     check_in = Column(Time, nullable=True)
     check_out = Column(Time, nullable=True)
     att_status = Column(Enum(AttendanceStatus), nullable=False, default=AttendanceStatus.PRESENT)
-    
+    approval_status = Column(Enum(LeaveStatus), nullable=False, default=LeaveStatus.APPROVED)  
     employee = relationship("Employee", backref="attendance_records")
 
 
