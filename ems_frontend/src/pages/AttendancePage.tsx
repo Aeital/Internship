@@ -21,6 +21,7 @@ interface Attendance {
   check_in?: string
   check_out?: string
   att_status: 'present' | 'absent' | 'half_day' | 'late'
+  approval_status: 'pending' | 'approved' | 'rejected'
 }
 
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
@@ -69,7 +70,8 @@ function StaffAttendance() {
 
   const todayRecord = records.find((r) => r.att_date === todayStr())
   const monthRec = records.filter((r) => r.att_date.startsWith(currentMonth()))
-  const presentDays = monthRec.filter((r) => r.att_status === 'present').length
+  // Present Days = any non-absent day (present, late, half_day all count as "present")
+  const presentDays = monthRec.filter((r) => r.att_status !== 'absent').length
   const lateDays = monthRec.filter((r) => {
   if (!r.check_in) return false
   const [h, m] = r.check_in.split(':').map(Number)
@@ -90,6 +92,7 @@ function StaffAttendance() {
     setEditId(null); setError(''); setModal('mark')
   }
   const openEdit = (a: Attendance) => {
+    if (a.att_date !== todayStr()) return // safety guard, UI already hides this path
     setForm({ att_date: a.att_date, check_in: a.check_in || '', check_out: a.check_out || '', att_status: a.att_status })
     setEditId(a.att_id); setError(''); setModal('edit')
   }
@@ -101,7 +104,7 @@ function StaffAttendance() {
       else if (editId) await api.put(`/attendance/${editId}`, payload)
       setModal(null); load()
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to save attendance.')
+      setError(err.response?.data?.error || err.response?.data?.detail || 'Failed to save attendance.')
     }
     setSaving(false)
   }
@@ -135,7 +138,7 @@ function StaffAttendance() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
             <CheckCell icon={<LogIn size={16} color="#64748b" />} label="Checked In" value={todayRecord?.check_in ? formatTime12(todayRecord.check_in) : '--:-- --'} />
             <button
-              onClick={openMark}
+              onClick={() => (todayRecord ? openEdit(todayRecord) : openMark())}
               style={{ background: '#1a56db', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 8px', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
             >
               <LogOut size={15} />
@@ -188,6 +191,7 @@ function StaffAttendance() {
                   {records.map((a, i) => {
                     const sc = STATUS_COLORS[a.att_status] ?? { bg: '#f1f5f9', fg: '#64748b' }
                     const hrs = calcHours(a.att_date, a.check_in, a.check_out)
+                    const isToday = a.att_date === todayStr()
                     return (
                       <tr key={a.att_id} style={{ borderBottom: i < records.length - 1 ? '1px solid #f8faff' : 'none' }}>
                         <td style={{ padding: '12px 14px' }}>
@@ -212,9 +216,23 @@ function StaffAttendance() {
                           <span style={{ background: sc.bg, color: sc.fg, fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 99, textTransform: 'capitalize' }}>
                             {a.att_status.replace('_', ' ')}
                           </span>
+                          {a.approval_status === 'pending' && (
+                            <span style={{ marginLeft: 6, background: '#fef9c3', color: '#ca8a04', fontSize: 10.5, fontWeight: 600, padding: '3px 8px', borderRadius: 99 }}>
+                              Pending Approval
+                            </span>
+                          )}
+                          {a.approval_status === 'rejected' && (
+                            <span style={{ marginLeft: 6, background: '#fef2f2', color: '#dc2626', fontSize: 10.5, fontWeight: 600, padding: '3px 8px', borderRadius: 99 }}>
+                              Rejected
+                            </span>
+                          )}
                         </td>
                         <td style={{ padding: '12px 14px' }}>
-                          <button onClick={() => openEdit(a)} style={{ background: 'none', border: 'none', color: '#1a56db', fontSize: 12.5, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>Edit</button>
+                          {isToday ? (
+                            <button onClick={() => openEdit(a)} style={{ background: 'none', border: 'none', color: '#1a56db', fontSize: 12.5, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>Edit</button>
+                          ) : (
+                            <span style={{ fontSize: 12, color: '#cbd5e1' }}>Locked</span>
+                          )}
                         </td>
                       </tr>
                     )
@@ -242,6 +260,11 @@ function StaffAttendance() {
             <Field label="Check In" type="time" value={form.check_in} onChange={(v) => setForm({ ...form, check_in: v })} />
             <Field label="Check Out" type="time" value={form.check_out} onChange={(v) => setForm({ ...form, check_out: v })} />
           </div>
+          {modal === 'edit' && (
+            <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 10 }}>
+              Note: editing an existing record will send it for HR approval.
+            </div>
+          )}
           {error && <div style={errorBox}>{error}</div>}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
             <button onClick={() => setModal(null)} style={cancelBtn}>Cancel</button>
@@ -325,7 +348,7 @@ function AdminAttendance() {
       if (modal === 'mark') await api.post('/attendance', payload)
       else if (editId) await api.put(`/attendance/${editId}`, payload)
       setModal(null); load()
-    } catch (err: any) { setError(err.response?.data?.error || 'Failed to save.') }
+    } catch (err: any) { setError(err.response?.data?.error || err.response?.data?.detail || 'Failed to save.') }
     setSaving(false)
   }
   const handleDelete = async (id: number) => { try { await api.delete(`/attendance/${id}`); load() } catch {} }
@@ -357,7 +380,12 @@ function AdminAttendance() {
                       <td style={{ padding: '12px 14px', color: '#64748b' }}>{a.att_date}</td>
                       <td style={{ padding: '12px 14px', color: '#64748b' }}>{a.check_in || '—'}</td>
                       <td style={{ padding: '12px 14px', color: '#64748b' }}>{a.check_out || '—'}</td>
-                      <td style={{ padding: '12px 14px' }}><span style={{ background: sc.bg, color: sc.fg, fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 99, textTransform: 'capitalize' }}>{a.att_status.replace('_', ' ')}</span></td>
+                      <td style={{ padding: '12px 14px' }}>
+                        <span style={{ background: sc.bg, color: sc.fg, fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 99, textTransform: 'capitalize' }}>{a.att_status.replace('_', ' ')}</span>
+                        {a.approval_status === 'pending' && (
+                          <span style={{ marginLeft: 6, background: '#fef9c3', color: '#ca8a04', fontSize: 10.5, fontWeight: 600, padding: '2px 8px', borderRadius: 99 }}>Pending</span>
+                        )}
+                      </td>
                       <td style={{ padding: '12px 14px' }}>
                         <div style={{ display: 'flex', gap: 6 }}>
                           <button onClick={() => openEdit(a)} style={{ background: '#e8effd', color: '#1a56db', border: 'none', borderRadius: 7, padding: '5px 12px', fontSize: 12.5, fontFamily: 'inherit', cursor: 'pointer' }}>Edit</button>
