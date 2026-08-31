@@ -6,7 +6,7 @@ from app.core.exceptions import NotFoundException
 from app.core.openapi_responses import NOT_FOUND_RESPONSE, VALIDATION_RESPONSE, DB_ERROR_RESPONSE
 from app.schemas.attendance import AttendanceCreate, AttendanceUpdate, AttendanceResponse
 from app.services.attendance_service import AttendanceService
-from app.deps import get_current_user, require_role
+from app.api.deps import get_current_user, require_role
 from app.models.models import Employee, RoleEnum
 
 router = APIRouter()
